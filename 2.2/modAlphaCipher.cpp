@@ -1,56 +1,70 @@
-#include "modAlphaCipher.h"
-Cipher::Cipher(int password)
+#include "headers/routeCipher.h"
+#include <algorithm>
+routeCipher::routeCipher(const int& key)
 {
-    this->p=password;
+ columns = key;
 }
-wstring Cipher::zakodirovatCipher(Cipher w, wstring& s)
+std::string routeCipher::encrypt(const std::string& str)
 {
-    wstring Output;
-    int v;
-    int dlina=s.size();
-    if (s.size()%w.p!=0) {
-        v=s.size()/w.p+1;
-    } else {
-        v=s.size()/w.p;
-    }
-    wchar_t x[v][w.p];
-    int p=0;
-    for (int i=0; i<v; ++i) {
-        for (int k=0; k<w.p; ++k) {
-            if (p<s.length()) {
-                x[i][k]=s[p];
-                ++p;
-            } else x[i][k]=' ';
-        }
-    }
-    for (int i=0; i<w.p; ++i) {
-        for (int k=0; k<v; ++k) {
-            Output+=x[k][i];
-        }
-    }
-    return Output;
+ int rows = div_up(str.size(), columns);
+ std::vector<std::vector<char>> table;
+ for (int i = 0; i < rows; i++) {
+ table.emplace_back(std::vector<char>());
+ }
+ int charCount = 0;
+ int tableSize = columns * rows;
+ for (int i = 0; i < rows; i++) {
+ for (int j = 0; j < columns; j++) {
+ if (charCount < str.size()) {
+ table[i].push_back(str[charCount]);
+ charCount++;
+ } else {
+ table[i].push_back(' ');
+ charCount++;
+ }
+ }
+ }
+ std::string result;
+ for (int i = 0; i < rows; i++)
+ {
+ std::reverse(table[i].begin(), table[i].end());
+ for (int j = 0; j < table[i].size(); j++) {
+ result.push_back(table[i][j]);
+ }
+ }
+ return result;
 }
-wstring Cipher::raskodirovatCipher(Cipher w, wstring& s)
+std::string routeCipher::decrypt(const std::string& str)
 {
-    int v;
-    if (s.size()%w.p!=0) {
-        v=s.size()/w.p+1;
-    } else {
-        v=s.size()/w.p;
-    }
-    wchar_t x[v][w.p];
-    int p=0;
-    for (int i=0; i<w.p; ++i) {
-        for (int k=0; k<v; ++k) {
-            x[k][i]=s[p];
-            ++p;
-        }
-    }
-    wstring deOutput;
-    for (int i=0; i<v; ++i) {
-        for (int k=0; k<w.p; ++k) {
-            deOutput+=x[i][k];
-        }
-    }
-    return deOutput;
+ int rows = str.size() / columns;
+ std::vector<std::vector<char>> table;
+ for (int i = 0; i < rows; i++) {
+ table.emplace_back(std::vector<char>());
+ }
+ int charCount = 0;
+ int tableSize = columns * rows;
+ for (int i = 0; i < rows; i++) {
+ for (int j = 0; j < columns; j++) {
+ if (charCount < str.size()) {
+ table[i].push_back(str[charCount]);
+ charCount++;
+ } else {
+ table[i].push_back(' ');
+ charCount++;
+ }
+ }
+ }
+ std::string result;
+ for (int i = 0; i < rows; i++)
+ {
+ std::reverse(table[i].begin(), table[i].end());
+ for (int j = 0; j < table[i].size(); j++) {
+ result.push_back(table[i][j]);
+ }
+ }
+ return result;
+}
+int routeCipher::div_up(int x, int y)
+{
+ return (x - 1) / y + 1;
 }
