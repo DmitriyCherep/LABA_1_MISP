@@ -1,13 +1,14 @@
 #pragma once
+#include <vector>
 #include <string>
-using namespace std;
-class Cipher
+class routeCipher
 {
-private:
-    int p;
-public:
-    Cipher()=delete;
-    Cipher(int w);
-    wstring zakodirovatCipher(Cipher w, wstring& s);
-    wstring raskodirovatCipher(Cipher w, wstring& s);
+ private:
+ int columns;
+ int div_up(int x, int y);
+ public:
+ routeCipher()=delete;
+ routeCipher(const int& key);
+ std::string encrypt(const std::string& open_text);
+ std::string decrypt(const std::string& cipher_text);
 };
