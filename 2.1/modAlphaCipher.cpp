@@ -14,7 +14,6 @@ modAlphaCipher::modAlphaCipher(const std::wstring& skey)
  }
  key = convert(skey);
 }
-6
 std::wstring modAlphaCipher::encrypt(const std::wstring& open_text)
 {
  std::vector<int> work = convert(open_text);
