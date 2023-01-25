@@ -11,7 +11,6 @@ map <char,int> alphaNum;
 vector <int> key; //ключ
 vector<int> convert(const wstring& s); 
 wstring convert(const vector<int>& v); 
-вектор-строка
 public:
 modAlphaCipher()=delete; 
 modAlphaCipher(const wstring& skey); 
