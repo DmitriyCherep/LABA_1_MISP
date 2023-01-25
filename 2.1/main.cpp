@@ -1,25 +1,24 @@
 #include <iostream>
 #include <cctype>
-#include "headers/modAlphaCipher.h"
-#include <Windows.h>
+#include "modAlphaCipher.h"
+#include <locale>
 using namespace std;
 bool isValid(const wstring& s)
 {
- for(unsigned i = 0; i < s.size(); i++) {
- if (!(((int)s[i] > 191 && (int)s[i] < 224) || ((int)s[i] == 168)))
+ for(auto c:s)
+ if (!iswalpha(c) || !iswupper(c))
  return false;
- }
  return true;
 }
-int main(int argc, char **argv)
+int main()
 {
- SetConsoleCP(1251);
- SetConsoleOutputCP(1251);
+locale loc("ru_RU.UTF-8");
+locale::global(loc);
  wstring key;
  wstring text;
  unsigned op;
- wcout << L"Cipher ready. Input key: ";
- wcin >> key;
+ wcout<<L"Cipher ready. Input key: ";
+ wcin>>key;
  if (!isValid(key)) {
  wcerr<<L"key not valid\n";
  return 1;
@@ -27,8 +26,7 @@ int main(int argc, char **argv)
  wcout<<L"Key loaded\n";
  modAlphaCipher cipher(key);
  do {
- wcout<<L"Cipher ready. Input operation (0-exit, 1-encrypt, 2-
-decrypt): ";
+ wcout<<L"Cipher ready. Input operation (0-exit, 1- encrypt, 2-decrypt): ";
  wcin>>op;
  if (op > 2) {
  wcout<<L"Illegal operation\n";
@@ -37,11 +35,9 @@ decrypt): ";
  wcin>>text;
  if (isValid(text)) {
  if (op==1) {
- wcout<< L"Encrypted text: " << cipher.encrypt(text)
-<<endl;
+ wcout<<L"Encrypted text:"<<cipher.encrypt(text)<<endl;
  } else {
- wcout<< L"Decrypted text: " << cipher.decrypt(text)
-<<endl;
+ wcout<<L"Decrypted text:"<<cipher.decrypt(text)<<endl;
  }
  } else {
  wcout<<L"Operation aborted: invalid text\n";
@@ -50,4 +46,3 @@ decrypt): ";
  } while (op!=0);
  return 0;
 }
-
