@@ -1,70 +1,40 @@
-#include "headers/routeCipher.h"
-#include <algorithm>
-routeCipher::routeCipher(const int& key)
+#include "modTableCipher.h"
+using namespace std;
+string modTableCipher::decrypt(const string& cipher_text) 
 {
- columns = key;
+ string text = cipher_text;
+ int length, lineQUA, position, i;
+ length = cipher_text.size();
+ lineQUA = (length - 1) / key+ 1; 
+ i = 0;
+ for (int columNUM = key; columNUM > 0; columNUM--) { 
+ for (int lineNUM = 0; lineNUM < lineQUA; lineNUM++) {
+
+ position = key*lineNUM+columNUM;
+ if (position-1 < length) {
+ text[position-1] = cipher_text[i];
+ i++;
+ }
+ }
+ }
+ return text;
 }
-std::string routeCipher::encrypt(const std::string& str)
+string modTableCipher::encrypt(const string& open_text) 
 {
- int rows = div_up(str.size(), columns);
- std::vector<std::vector<char>> table;
- for (int i = 0; i < rows; i++) {
- table.emplace_back(std::vector<char>());
- }
- int charCount = 0;
- int tableSize = columns * rows;
- for (int i = 0; i < rows; i++) {
- for (int j = 0; j < columns; j++) {
- if (charCount < str.size()) {
- table[i].push_back(str[charCount]);
- charCount++;
- } else {
- table[i].push_back(' ');
- charCount++;
+ string text = open_text;
+ int length, lineQUA, position, i;
+ length = open_text.size();
+ lineQUA = (length - 1) / key + 1; 
+ i = 0;
+ for (int columNUM = key; columNUM > 0; columNUM--) {
+ for (int lineNUM = 0; lineNUM < lineQUA; lineNUM++) {
+ position = columNUM+key*lineNUM;
+ if (position-1 < length) {
+ text[i] = open_text[position-1];
+ i++;
  }
  }
  }
- std::string result;
- for (int i = 0; i < rows; i++)
- {
- std::reverse(table[i].begin(), table[i].end());
- for (int j = 0; j < table[i].size(); j++) {
- result.push_back(table[i][j]);
- }
- }
- return result;
+ return text;
 }
-std::string routeCipher::decrypt(const std::string& str)
-{
- int rows = str.size() / columns;
- std::vector<std::vector<char>> table;
- for (int i = 0; i < rows; i++) {
- table.emplace_back(std::vector<char>());
- }
- int charCount = 0;
- int tableSize = columns * rows;
- for (int i = 0; i < rows; i++) {
- for (int j = 0; j < columns; j++) {
- if (charCount < str.size()) {
- table[i].push_back(str[charCount]);
- charCount++;
- } else {
- table[i].push_back(' ');
- charCount++;
- }
- }
- }
- std::string result;
- for (int i = 0; i < rows; i++)
- {
- std::reverse(table[i].begin(), table[i].end());
- for (int j = 0; j < table[i].size(); j++) {
- result.push_back(table[i][j]);
- }
- }
- return result;
-}
-int routeCipher::div_up(int x, int y)
-{
- return (x - 1) / y + 1;
-}
+
