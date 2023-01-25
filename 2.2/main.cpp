@@ -1,48 +1,41 @@
-#include <iostream>
-#include <limits>
-#include "headers/routeCipher.h"
-bool isValid(const std::string& s)
+#include "modTableCipher.h"
+using namespace std;
+bool isValid(const string& s)
 {
- for(unsigned i = 0; i < s.size(); i++) {
- if (!((int)s[i] > 31 && (int)s[i] < 128))
+ for(auto c:s)
+ if (!isalpha(c) || !isupper(c))
  return false;
- }
  return true;
 }
-int main()
+int main(int argc, char **argv)
 {
  int key;
- std::string text;
+ string text;
  unsigned op;
- std::cout << "Key: ";
- std::cin >> key;
- while(std::cin.fail()) {
- std::cout << "Can only receive integers. Key: ";
- std::cin.clear();
- std::cin.ignore(256,'\n');
- std::cin >> key;
+ cout<<"Cipher ready. Input key: ";
+ cin>>key;
+ if (!cin.good()) {
+ cerr<<"key not valid\n";
+ return 1;
  }
- routeCipher cipher(key);
+ cout<<"Key loaded\n";
+ modTableCipher cipher(key);
  do {
- std::cout<<"Operation (0-exit, 1-encrypt, 2-decrypt): ";
- std::cin>>op;
+ cout<<"Cipher ready. Input operation (0-exit, 1-encrypt, 2-decrypt): ";
+ cin>>op;
  if (op > 2) {
- std::cout<<"Illegal operation\n";
+ cout<<"Illegal operation\n";
  } else if (op >0) {
- std::cout<<"Text: ";
- std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\
-n');
- std::getline(std::cin, text);
+ cout<<"Cipher ready. Input text: ";
+ cin>>text;
  if (isValid(text)) {
  if (op==1) {
- std::cout<< "Encrypted text: " << cipher.encrypt(text)
-<<std::endl;
+ cout<<"Encrypted text:"<<cipher.encrypt(text)<<endl;
  } else {
- std::cout<< "Decrypted text: " << cipher.decrypt(text)
-<<std::endl;
+ cout<<"Decrypted text:"<<cipher.decrypt(text)<<endl;
  }
  } else {
- std::cout<<"Operation aborted: invalid text\n";
+ cout<<"Operation aborted: invalid text\n";
  }
  }
  } while (op!=0);
