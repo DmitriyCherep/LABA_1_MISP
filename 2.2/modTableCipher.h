@@ -1,15 +1,13 @@
 #pragma once
-#include <iostream>
 #include <string>
-#include <cctype>
 using namespace std;
-class modTableCipher
+class Cipher
 {
 private:
- int key;
+    int p;
 public:
- modTableCipher()=delete;
- modTableCipher(const int& key){};
- string encrypt(const string& open_text); 
- string decrypt(const string& cipher_text); 
+    Cipher()=delete;
+    Cipher(int w);
+    wstring zakodirovatCipher(Cipher w, wstring& s);
+    wstring raskodirovatCipher(Cipher w, wstring& s);
 };
